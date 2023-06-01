@@ -6,3 +6,4 @@ node_modules/
 .env.local
 .env.*.local
 
+mysql -h <hostname> -P <port> -u <username> -p <database_name> < <path_to_sql_file.sql>
