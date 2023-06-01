@@ -28,5 +28,5 @@ app.use("/employee", employeeRouter);
 app.use("/saleOrder", saleOrderRouter);
 
 app.get("*", (req, res) => {
-  res.send("404 Not found");
+  res.send("404 Not found!");
 });
