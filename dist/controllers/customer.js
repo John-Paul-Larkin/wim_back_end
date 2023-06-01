@@ -54,7 +54,6 @@ const deleteCustomer = (req, res) => {
                WHERE customer_id = ?`;
     const values = [idOfCustomerToDelete];
     dbConfig_1.default.query(sql, values, (err, result) => {
-        console.log(result);
         res.send(JSON.stringify(result));
     });
 };

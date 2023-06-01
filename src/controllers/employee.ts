@@ -54,7 +54,6 @@ const deleteEmployee = (req: Request, res: Response) => {
                WHERE employee_id = ?`;
   const values = [idOfEmployeeToDelete];
   pool.query(sql, values, (err, result) => {
-    console.log(result);
     res.send(JSON.stringify(result));
   });
 };

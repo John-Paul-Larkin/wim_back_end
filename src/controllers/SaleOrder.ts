@@ -59,7 +59,6 @@ const editSaleOrder = (req: Request, res: Response) => {
   });
 };
 
-
 const getOrderReceivedIds = (req: Request, res: Response) => {
   pool.query(`select order_id from sale_orders where status = "received";`, (err, result: any) => {
     const orderIds = result.map((order: any) => order.order_id);
@@ -102,11 +101,9 @@ const getSaleOrders = (req: Request, res: Response) => {
             where sale_orders.order_id = ${id};
             `,
     (err, result: any) => {
-      // orders.push(result);
-      // res.append()
-      console.log(err);
-      // count++;
-
+      if (err) {
+        console.log(err);
+      }
       res.setHeader("Access-Control-Allow-Credentials", "true");
       res.send(JSON.stringify(result));
     }
@@ -116,8 +113,6 @@ const getSaleOrders = (req: Request, res: Response) => {
 const setOrderPicked = (req: Request, res: Response) => {
   const id = req.params.id;
 
-  console.log(id);
-
   pool.query(
     `UPDATE sale_orders
     SET status = 'picked',
@@ -125,7 +120,9 @@ const setOrderPicked = (req: Request, res: Response) => {
     WHERE order_id = ${id};`,
 
     (err, result: any) => {
-      console.log(err);
+      if (err) {
+        console.log(err);
+      }
       res.setHeader("Access-Control-Allow-Credentials", "true");
       res.send(JSON.stringify(result));
     }
@@ -142,7 +139,9 @@ const setOrderSent = (req: Request, res: Response) => {
     WHERE order_id = ${id};`,
 
     (err, result: any) => {
-      console.log(err, "update to sent error");
+      if (err) {
+        console.log(err, "update to sent error");
+      }
       res.setHeader("Access-Control-Allow-Credentials", "true");
       res.send(JSON.stringify(result));
     }
@@ -151,7 +150,6 @@ const setOrderSent = (req: Request, res: Response) => {
 
 const updateQuantityOnSent = (req: Request, res: Response) => {
   const orderDetails = req.body.orderDetails;
-  console.log(orderDetails, "order details");
 
   orderDetails.forEach((order: OrderDetails) => {
     const productID = order.productId;
@@ -174,13 +172,4 @@ const updateQuantityOnSent = (req: Request, res: Response) => {
   res.send(JSON.stringify("ok"));
 };
 
-export {
-  updateQuantityOnSent,
-  editSaleOrder,
-  getOrderReceivedIds,
-  getOrderSentIds,
-  getOrderPickedIds,
-  getSaleOrders,
-  setOrderPicked,
-  setOrderSent,
-};
+export { updateQuantityOnSent, editSaleOrder, getOrderReceivedIds, getOrderSentIds, getOrderPickedIds, getSaleOrders, setOrderPicked, setOrderSent };

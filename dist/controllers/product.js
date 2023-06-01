@@ -43,7 +43,6 @@ const editProduct = (req, res) => {
         const values = [name, description, quantity_in_stock, sold_by, case_size, unit_rrp, restock_level, sku, purchase_price, sale_price, product_id];
         dbConfig_1.default.query(sql, values, (err, result) => {
             if (err) {
-                console.log(err);
                 res.send(JSON.stringify(err));
             }
             else {

@@ -54,7 +54,6 @@ const deleteCustomer = (req: Request, res: Response) => {
                WHERE customer_id = ?`;
   const values = [idOfCustomerToDelete];
   pool.query(sql, values, (err, result) => {
-    console.log(result);
     res.send(JSON.stringify(result));
   });
 };
