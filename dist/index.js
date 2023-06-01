@@ -19,7 +19,7 @@ const corsOptions = {
 app.use((0, cors_1.default)(corsOptions));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded());
-app.listen(process.env.PORT, () => console.log("listening"));
+app.listen(process.env.PORT, () => console.log("listening on port", process.env.PORT));
 app.use("/customer", customerRouter_1.default);
 app.use("/product", productRouter_1.default);
 app.use("/supplier", supplierRouter_1.default);
