@@ -78,6 +78,7 @@ const getOrderSentIds = (req, res) => {
     });
 };
 exports.getOrderSentIds = getOrderSentIds;
+
 const getSaleOrders = (req, res) => {
     const id = req.params.id;
     dbConfig_1.default.query(`
