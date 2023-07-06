@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 
 import pool from "../config/dbConfig";
 
-import { OrderDetails, ProductDataQuantity } from "../types/types";
+import { ProductDataQuantity, SalesOrderDetails } from "../types/types";
 
 const editSaleOrder = (req: Request, res: Response) => {
   res.setHeader("Access-Control-Allow-Credentials", "true");
@@ -151,7 +151,7 @@ const setOrderSent = (req: Request, res: Response) => {
 const updateQuantityOnSent = (req: Request, res: Response) => {
   const orderDetails = req.body.orderDetails;
 
-  orderDetails.forEach((order: OrderDetails) => {
+  orderDetails.forEach((order: SalesOrderDetails) => {
     const productID = order.productId;
     const orderQuantity = order.quantity;
 
@@ -172,4 +172,4 @@ const updateQuantityOnSent = (req: Request, res: Response) => {
   res.send(JSON.stringify("ok"));
 };
 
-export { updateQuantityOnSent, editSaleOrder, getOrderReceivedIds, getOrderSentIds, getOrderPickedIds, getSaleOrders, setOrderPicked, setOrderSent };
+export { editSaleOrder, getOrderPickedIds, getOrderReceivedIds, getOrderSentIds, getSaleOrders, setOrderPicked, setOrderSent, updateQuantityOnSent };

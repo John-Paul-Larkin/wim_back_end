@@ -8,11 +8,11 @@ import {
   setOrderPicked,
   setOrderSent,
   updateQuantityOnSent,
-} from "../controllers/SaleOrder";
+} from "../controllers/saleOrder";
 
-const supplierRouter = express.Router();
+const saleOrderRouter = express.Router();
 
-supplierRouter
+saleOrderRouter
   .post("/", (req, res) => editSaleOrder(req, res))
   .get("/getOrderReceivedIds", (req, res) => getOrderReceivedIds(req, res))
   .get("/getOrderPickedIds", (req, res) => getOrderPickedIds(req, res))
@@ -22,4 +22,4 @@ supplierRouter
   .post("/setSent/", (req, res) => setOrderSent(req, res))
   .post("/updateQuantityOnSent/", (req, res) => updateQuantityOnSent(req, res));
 
-export default supplierRouter;
+export default saleOrderRouter;
