@@ -4,7 +4,7 @@ import pool from "../config/dbConfig";
 
 import { ProductDataQuantity, SalesOrderDetails } from "../types/types";
 
-const editSaleOrder = (req: Request, res: Response) => {
+const createSaleOrder = (req: Request, res: Response) => {
   res.setHeader("Access-Control-Allow-Credentials", "true");
 
   const customerID = req.body.customerID;
@@ -83,7 +83,7 @@ const getOrderSentIds = (req: Request, res: Response) => {
   });
 };
 
-const getSaleOrders = (req: Request, res: Response) => {
+const getSaleOrder = (req: Request, res: Response) => {
   const id = req.params.id;
 
   pool.query(
@@ -172,4 +172,13 @@ const updateQuantityOnSent = (req: Request, res: Response) => {
   res.send(JSON.stringify("ok"));
 };
 
-export { editSaleOrder, getOrderPickedIds, getOrderReceivedIds, getOrderSentIds, getSaleOrders, setOrderPicked, setOrderSent, updateQuantityOnSent };
+export {
+  createSaleOrder,
+  getOrderPickedIds,
+  getOrderReceivedIds,
+  getOrderSentIds,
+  getSaleOrder,
+  setOrderPicked,
+  setOrderSent,
+  updateQuantityOnSent,
+};
