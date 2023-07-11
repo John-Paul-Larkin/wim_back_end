@@ -51,8 +51,19 @@ interface SalesOrderDetails {
   productId: number;
 }
 
+interface PurchaseOrderDetails {
+  productId: number;
+  productName: string;
+  caseSize: number;
+  soldBy: string;
+  quantity: number;
+  orderedDate: string;
+  supplierName: string;
+  employeeName: string;
+}
+
 interface ProductDataQuantity extends ProductData {
   order_quantity: number;
 }
 
-export { CustomerData, EmployeeData, ProductData, ProductDataQuantity, SalesOrderDetails, SupplierData };
+export { CustomerData, EmployeeData, ProductData, ProductDataQuantity, PurchaseOrderDetails, SalesOrderDetails, SupplierData };

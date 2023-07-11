@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import pool from "../config/dbConfig";
-import { ProductDataQuantity } from "../types/types";
+import { ProductDataQuantity, PurchaseOrderDetails } from "../types/types";
 
 const createPurchaseOrder = (req: Request, res: Response) => {
   res.setHeader("Access-Control-Allow-Credentials", "true");
@@ -53,11 +53,19 @@ const getOrderedIds = (req: Request, res: Response) => {
   });
 };
 
+const getReceivedIds = (req: Request, res: Response) => {
+  pool.query(`select purchase_id from purchase_orders where status = "received";`, (err, result: any) => {
+    const orderIds = result.map((order: any) => order.purchase_id);
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.send(JSON.stringify(orderIds));
+  });
+};
+
 const getPurchaseOrder = (req: Request, res: Response) => {
-    const id = req.params.id;
-  
-    pool.query(
-      `
+  const id = req.params.id;
+
+  pool.query(
+    `
       select product.product_id AS productId, product.name AS productName, product.case_size AS caseSize, product.sold_by AS soldBy, purchase_orders_product.quantity AS quantity, purchase_orders.ordered_date AS orderedDate, supplier.name AS supplierName, employee.name AS employeeName 
       from product
       inner join purchase_orders_product
@@ -68,18 +76,58 @@ const getPurchaseOrder = (req: Request, res: Response) => {
       on employee.employee_id = purchase_orders.ordered_by_employee
       inner join supplier
       on supplier.supplier_id = purchase_orders.supplier_id
-      where purchase_orders.purchase_id = 6;
+      where purchase_orders.purchase_id = ${id};
               `,
-      (err, result: any) => {
-        if (err) {
-          console.log(err);
-        }
-        res.setHeader("Access-Control-Allow-Credentials", "true");
-        res.send(JSON.stringify(result));
+    (err, result: any) => {
+      if (err) {
+        console.log(err);
       }
-    );
-  }; 
+      res.setHeader("Access-Control-Allow-Credentials", "true");
+      res.send(JSON.stringify(result));
+    }
+  );
+};
 
+const setOrderReceived = (req: Request, res: Response) => {
+  const id = req.body.id;
 
+  pool.query(
+    `UPDATE purchase_orders
+      SET status = 'received'
+      WHERE purchase_id = ${id};`,
 
-export { createPurchaseOrder, getOrderedIds, getPurchaseOrder };
+    (err, result: any) => {
+      if (err) {
+        console.log(err, "update to received error");
+      }
+      res.setHeader("Access-Control-Allow-Credentials", "true");
+      res.send(JSON.stringify(result));
+    }
+  );
+};
+
+const updateQuantityOnReceived = (req: Request, res: Response) => {
+  const orderDetails = req.body.orderDetails;
+
+  orderDetails.forEach((order: PurchaseOrderDetails) => {
+    const productID = order.productId;
+    const orderQuantity = order.quantity;
+
+    const QueryString = `
+    UPDATE product
+    SET
+     quantity_in_stock = quantity_in_stock + ${orderQuantity}
+    WHERE product_id = ${productID};
+ `;
+    pool.query(QueryString, (err, result: any) => {
+      if (err) {
+        console.log(err);
+      }
+    });
+  });
+
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.send(JSON.stringify("ok"));
+};
+
+export { createPurchaseOrder, getOrderedIds, getPurchaseOrder, getReceivedIds, setOrderReceived, updateQuantityOnReceived };

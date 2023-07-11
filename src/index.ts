@@ -8,6 +8,7 @@ import productRouter from "./routes/productRouter";
 import saleOrderRouter from "./routes/saleOrderRouter";
 import supplierRouter from "./routes/supplierRouter";
 import purchaseOrderRouter from "./routes/purchaseOrderRouter";
+import dashboardRouter from "./routes/dashboardRouter";
 
 dotenv.config();
 const app: Express = express();
@@ -28,6 +29,7 @@ app.use("/supplier", supplierRouter);
 app.use("/employee", employeeRouter);
 app.use("/saleOrder", saleOrderRouter);
 app.use("/purchaseOrder", purchaseOrderRouter);
+app.use("/dashboard", dashboardRouter)
 
 app.get("*", (req, res) => {
   res.send("404 Not found!");

@@ -130,7 +130,6 @@ const setOrderPicked = (req: Request, res: Response) => {
 };
 
 const setOrderSent = (req: Request, res: Response) => {
-  // const id = req.params.id;
   const id = req.body.id;
 
   pool.query(
