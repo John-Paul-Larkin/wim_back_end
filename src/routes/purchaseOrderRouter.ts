@@ -16,6 +16,7 @@ purchaseOrderRouter
   .get("/getReceivedIds", (req, res) => getReceivedIds(req, res))
   .get("/:id", (req, res) => getPurchaseOrder(req, res))
   .post("/setReceived/:id", (req, res) => setOrderReceived(req, res))
-  .post("/updateQuantityOnReceived/", (req, res) => updateQuantityOnReceived(req, res));
+  .post("/updateQuantityOnReceived/", (req, res) => updateQuantityOnReceived(req, res))
+  
 
 export default purchaseOrderRouter;

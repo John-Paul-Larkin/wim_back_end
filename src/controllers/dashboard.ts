@@ -21,8 +21,6 @@ const getProductsBelowRestock = (req: Request, res: Response) => {
     WHERE product.quantity_in_stock < product.restock_level;
     `,
     (err, result) => {
-      // console.log(result)
-
       res.setHeader("Access-Control-Allow-Credentials", "true");
       res.send(JSON.stringify(result));
     }
@@ -31,13 +29,10 @@ const getProductsBelowRestock = (req: Request, res: Response) => {
 
 const getSalesBetweenDates = (req: Request, res: Response) => {
   const timeInterval = req.params.timeInterval;
-
-  console.log(timeInterval);
-  console.log(typeof timeInterval);
-
+  // time interval either week month or all-time
   if (timeInterval === "all-time") {
     pool.query(
-      `SELECT SUM(p.quantity * pr.purchase_price) AS total_value
+      `SELECT SUM(p.quantity * pr.sale_price) AS total_value
       FROM sale_orders AS so
       JOIN sale_orders_product AS p
         ON so.order_id = p.order_id
@@ -48,15 +43,30 @@ const getSalesBetweenDates = (req: Request, res: Response) => {
         res.send(JSON.stringify(result));
       }
     );
+  } else if (timeInterval === "today") {
+    pool.query(
+      `SELECT SUM(p.quantity * pr.sale_price) AS total_value
+      FROM sale_orders AS so
+      JOIN sale_orders_product AS p
+        ON so.order_id = p.order_id
+      JOIN product AS pr
+        ON p.product_id = pr.product_id
+        WHERE DATE(so.placed_date) = CURDATE();
+        `,
+      (err, result) => {
+        res.setHeader("Access-Control-Allow-Credentials", "true");
+        res.send(JSON.stringify(result));
+      }
+    );
   } else {
-    const sql = `SELECT SUM(p.quantity * pr.purchase_price) AS total_value
+    const sql = `SELECT SUM(p.quantity * pr.sale_price) AS total_value
   FROM sale_orders AS so
   JOIN sale_orders_product AS p
     ON so.order_id = p.order_id
   JOIN product AS pr
     ON p.product_id = pr.product_id
-  WHERE so.placed_date >= DATE_SUB(CURDATE(), INTERVAL 1 ${timeInterval})
-    AND so.placed_date < CURDATE();`;
+  WHERE DATE(so.placed_date) >= DATE_SUB(CURDATE(), INTERVAL 1 ${timeInterval})
+    AND DATE(so.placed_date) < CURDATE();`;
 
     // const values = [timeInterval];
     // NB  had issues here inputting a string literal into a prepared statement
@@ -70,9 +80,7 @@ const getSalesBetweenDates = (req: Request, res: Response) => {
 
 const getNumberOfSalesBetweenDates = (req: Request, res: Response) => {
   const timeInterval = req.params.timeInterval;
-
-  console.log(timeInterval);
-  console.log(typeof timeInterval);
+  console.log(timeInterval, "ti");
 
   if (timeInterval === "all-time") {
     pool.query(
@@ -87,6 +95,21 @@ const getNumberOfSalesBetweenDates = (req: Request, res: Response) => {
         res.send(JSON.stringify(result));
       }
     );
+  } else if (timeInterval === "today") {
+    pool.query(
+      `SELECT COUNT(DISTINCT p.order_id) as count
+      FROM sale_orders AS so
+      JOIN sale_orders_product AS p
+        ON so.order_id = p.order_id
+      JOIN product AS pr
+        ON p.product_id = pr.product_id
+        WHERE DATE(so.placed_date) = CURDATE();
+        `,
+      (err, result) => {
+        res.setHeader("Access-Control-Allow-Credentials", "true");
+        res.send(JSON.stringify(result));
+      }
+    );
   } else {
     const sql = `SELECT COUNT(DISTINCT p.order_id) as count
   FROM sale_orders AS so
@@ -94,17 +117,97 @@ const getNumberOfSalesBetweenDates = (req: Request, res: Response) => {
     ON so.order_id = p.order_id
   JOIN product AS pr
     ON p.product_id = pr.product_id
-  WHERE so.placed_date >= DATE_SUB(CURDATE(), INTERVAL 1 ${timeInterval})
-    AND so.placed_date < CURDATE();`;
+  WHERE DATE(so.placed_date) >= DATE_SUB(CURDATE(), INTERVAL 1 ${timeInterval})
+    AND DATE(so.placed_date) <= CURDATE();`;
 
     // const values = [timeInterval];
     // NB  had issues here inputting a string literal into a prepared statement
     pool.query(sql, (err, result) => {
-      console.log(err);
+      // console.log(err);
       res.setHeader("Access-Control-Allow-Credentials", "true");
       res.send(JSON.stringify(result));
     });
   }
 };
 
-export { getNumberOfSalesBetweenDates, getProductsBelowRestock, getSalesBetweenDates, getTotalPurchaseValueOfStock, getTotalSaleValueOfStock };
+const getDetailsForGraph = (req: Request, res: Response) => {
+  const numberOfDays = req.params.numberOfDays;
+
+  const sql = `SELECT 
+COALESCE(sales_subquery.order_date,
+        purchases_subquery.order_date) AS order_date,
+sales,
+purchases
+FROM
+(SELECT 
+    DATE(so.placed_date) AS order_date,
+        SUM(sop.quantity * pr.sale_price) AS sales
+FROM
+    sale_orders AS so
+JOIN sale_orders_product AS sop ON so.order_id = sop.order_id
+JOIN product AS pr ON sop.product_id = pr.product_id
+WHERE
+    DATE(so.placed_date) >= DATE_SUB(CURDATE(), INTERVAL ${numberOfDays} DAY)
+        AND DATE(so.placed_date) <= CURDATE() 
+GROUP BY DATE(so.placed_date)) AS sales_subquery
+    LEFT JOIN
+(SELECT 
+    DATE(po.ordered_date) AS order_date,
+        SUM(pop.quantity * pr.purchase_price) AS purchases
+FROM
+    purchase_orders AS po
+JOIN purchase_orders_product AS pop ON po.purchase_id = pop.purchase_id
+JOIN product AS pr ON pop.product_id = pr.product_id
+WHERE
+    DATE(po.ordered_date) >= DATE_SUB(CURDATE(), INTERVAL ${numberOfDays} DAY)
+        AND DATE(po.ordered_date) <= CURDATE() 
+GROUP BY DATE(po.ordered_date)) AS purchases_subquery ON sales_subquery.order_date = purchases_subquery.order_date 
+UNION SELECT 
+COALESCE(sales_subquery.order_date,
+        purchases_subquery.order_date) AS order_date,
+sales,
+purchases
+FROM
+(SELECT 
+    DATE(so.placed_date) AS order_date,
+        SUM(sop.quantity * pr.sale_price) AS sales
+FROM
+    sale_orders AS so
+JOIN sale_orders_product AS sop ON so.order_id = sop.order_id
+JOIN product AS pr ON sop.product_id = pr.product_id
+WHERE
+    DATE(so.placed_date) >= DATE_SUB(CURDATE(), INTERVAL ${numberOfDays} DAY)
+        AND DATE(so.placed_date) <= CURDATE()
+GROUP BY DATE(so.placed_date)) AS sales_subquery
+    RIGHT JOIN
+(SELECT 
+    DATE(po.ordered_date) AS order_date,
+        SUM(pop.quantity * pr.purchase_price) AS purchases
+FROM
+    purchase_orders AS po
+JOIN purchase_orders_product AS pop ON po.purchase_id = pop.purchase_id
+JOIN product AS pr ON pop.product_id = pr.product_id
+WHERE
+    DATE(po.ordered_date) >= DATE_SUB(CURDATE(), INTERVAL ${numberOfDays} DAY)
+        AND DATE(po.ordered_date) <= CURDATE() 
+GROUP BY DATE(po.ordered_date)) AS purchases_subquery ON sales_subquery.order_date = purchases_subquery.order_date
+WHERE
+sales_subquery.order_date IS NULL
+ORDER BY order_date DESC;
+`;
+
+  pool.query(sql, (err, result) => {
+    // console.log(err?.code, "error chart");
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.send(JSON.stringify(result));
+  });
+};
+
+export {
+  getDetailsForGraph,
+  getNumberOfSalesBetweenDates,
+  getProductsBelowRestock,
+  getSalesBetweenDates,
+  getTotalPurchaseValueOfStock,
+  getTotalSaleValueOfStock,
+};
