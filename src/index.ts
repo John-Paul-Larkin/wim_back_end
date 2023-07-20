@@ -1,8 +1,8 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express, { Express } from "express";
-import fs from "fs";
-import https from "https";
+// import fs from "fs";
+// import https from "https";
 
 import customerRouter from "./routes/customerRouter";
 import dashboardRouter from "./routes/dashboardRouter";
@@ -23,7 +23,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded());
 
-// app.listen(process.env.PORT, () => console.log("listening on port", process.env.PORT));
+app.listen(process.env.PORT, () => console.log("listening on port", process.env.PORT));
 
 app.use("/customer", customerRouter);
 app.use("/product", productRouter);
@@ -39,18 +39,18 @@ app.get("*", (req, res) => {
 
 // Listen both http & https ports
 // const httpServer = http.createServer(app);
-const httpsServer = https.createServer(
-  {
-    key: fs.readFileSync("/etc/letsencrypt/live/my_api_url/privkey.pem"),
-    cert: fs.readFileSync("/etc/letsencrypt/live/my_api_url/fullchain.pem"),
-  },
-  app
-);
+// const httpsServer = https.createServer(
+//   {
+//     key: fs.readFileSync("/etc/letsencrypt/live/my_api_url/privkey.pem"),
+//     cert: fs.readFileSync("/etc/letsencrypt/live/my_api_url/fullchain.pem"),
+//   },
+//   app
+// );
 
 // httpServer.listen(80, () => {
 //   console.log("HTTP Server running on port 80");
 // });
 
-httpsServer.listen(443, () => {
-  console.log("HTTPS Server running on port 443");
-});
+// httpsServer.listen(443, () => {
+//   console.log("HTTPS Server running on port 443");
+// });
