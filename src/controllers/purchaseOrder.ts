@@ -54,7 +54,8 @@ const getOrderedIds = (req: Request, res: Response) => {
 };
 
 const getReceivedIds = (req: Request, res: Response) => {
-  pool.query(`select purchase_id from purchase_orders where status = "received";`, (err, result: any) => {
+  pool.query(`select purchase_id from purchase_orders where status = "received" 
+  ORDER BY received_date;`, (err, result: any) => {
     const orderIds = result.map((order: any) => order.purchase_id);
     res.setHeader("Access-Control-Allow-Credentials", "true");
     res.send(JSON.stringify(orderIds));
@@ -66,7 +67,7 @@ const getPurchaseOrder = (req: Request, res: Response) => {
 
   pool.query(
     `
-      select product.product_id AS productId, product.name AS productName, product.case_size AS caseSize, product.sold_by AS soldBy, purchase_orders_product.quantity AS quantity, purchase_orders.ordered_date AS orderedDate, supplier.name AS supplierName, employee.name AS employeeName 
+      select product.product_id AS productId, product.name AS productName, product.case_size AS caseSize, product.sold_by AS soldBy, purchase_orders_product.quantity AS quantity, purchase_orders.received_date AS receivedDate, purchase_orders.ordered_date AS orderedDate, supplier.name AS supplierName, employee.name AS employeeName 
       from product
       inner join purchase_orders_product
       on product.product_id = purchase_orders_product.product_id
@@ -93,7 +94,8 @@ const setOrderReceived = (req: Request, res: Response) => {
 
   pool.query(
     `UPDATE purchase_orders
-      SET status = 'received'
+      SET status = 'received',
+      received_date = NOW()
       WHERE purchase_id = ${id};`,
 
     (err, result: any) => {
