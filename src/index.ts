@@ -24,13 +24,13 @@ app.use(express.urlencoded());
 
 app.listen(process.env.PORT, () => console.log("listening on port", process.env.PORT));
 
-app.use("/customer", customerRouter);
-app.use("/product", productRouter);
-app.use("/supplier", supplierRouter);
-app.use("/employee", employeeRouter);
-app.use("/saleOrder", saleOrderRouter);
-app.use("/purchaseOrder", purchaseOrderRouter);
-app.use("/dashboard", dashboardRouter);
+app.use("/api/customer", customerRouter);
+app.use("/api/product", productRouter);
+app.use("/api/supplier", supplierRouter);
+app.use("/api/employee", employeeRouter);
+app.use("/api/saleOrder", saleOrderRouter);
+app.use("/api/purchaseOrder", purchaseOrderRouter);
+app.use("/api/dashboard", dashboardRouter);
 
 app.get("*", (req, res) => {
   res.send("404 Not found!");
