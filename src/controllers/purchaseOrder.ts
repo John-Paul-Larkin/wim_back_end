@@ -59,6 +59,7 @@ const getReceivedIds = (req: Request, res: Response) => {
     `select purchase_id from purchase_orders where status = "received" 
   ORDER BY received_date;`,
     (err, result: any) => {
+      console.log(err);
       const orderIds = result.map((order: any) => order.purchase_id);
       res.setHeader("Access-Control-Allow-Credentials", "true");
 
