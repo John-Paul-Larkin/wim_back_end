@@ -301,7 +301,10 @@ ORDER BY order_date DESC;
 
   pool.query(sql, (err, result) => {
     // console.log(new Date().toString());
+    // console.log(new Date().toString());
     res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Allow-Origin", "true");
+    
     res.send(JSON.stringify(result));
   });
 };
