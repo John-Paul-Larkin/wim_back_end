@@ -61,6 +61,10 @@ const createSaleOrder = (req: Request, res: Response) => {
 
 const getOrderReceivedIds = (req: Request, res: Response) => {
   pool.query(`select order_id from sale_orders where status = "received";`, (err, result: any) => {
+
+    console.log(err)
+    
+    
     const orderIds = result.map((order: any) => order.order_id);
     res.setHeader("Access-Control-Allow-Credentials", "true");
 
@@ -70,6 +74,8 @@ const getOrderReceivedIds = (req: Request, res: Response) => {
 
 const getOrderPickedIds = (req: Request, res: Response) => {
   pool.query(`select order_id from sale_orders where status = "picked";`, (err, result: any) => {
+    console.log(err)
+
     const orderIds = result.map((order: any) => order.order_id);
     res.setHeader("Access-Control-Allow-Credentials", "true");
 
@@ -79,6 +85,8 @@ const getOrderPickedIds = (req: Request, res: Response) => {
 
 const getOrderSentIds = (req: Request, res: Response) => {
   pool.query(`select order_id from sale_orders where status = "sent";`, (err, result: any) => {
+    console.log(err)
+
     const orderIds = result.map((order: any) => order.order_id);
     res.setHeader("Access-Control-Allow-Credentials", "true");
 
