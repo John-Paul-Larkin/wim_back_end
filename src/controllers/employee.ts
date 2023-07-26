@@ -4,14 +4,14 @@ import pool from "../config/dbConfig";
 const getAllEmployees = (req: Request, res: Response) => {
   pool.query("select * from employee;", (err, result) => {
     res.setHeader("Access-Control-Allow-Credentials", "true");
-    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Origin", process.env.CORS_HOST!);
     res.send(JSON.stringify(result));
   });
 };
 
 const editEmployee = (req: Request, res: Response) => {
   res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Origin", process.env.CORS_HOST!);
 
   const name = req.body.name;
   const contact_phone = req.body.contact_phone;

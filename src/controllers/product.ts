@@ -5,14 +5,14 @@ import pool from "../config/dbConfig";
 const getAllProducts = (req: Request, res: Response) => {
   pool.query("select * from product;", (err, result) => {
     res.setHeader("Access-Control-Allow-Credentials", "true");
-    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Origin", process.env.CORS_HOST!);
     res.send(JSON.stringify(result));
   });
 };
 
 const editProduct = (req: Request, res: Response) => {
   res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Origin", process.env.CORS_HOST!);
 
   const name = req.body.name;
   const description = req.body.description;
