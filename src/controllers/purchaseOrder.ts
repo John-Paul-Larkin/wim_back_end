@@ -4,6 +4,7 @@ import { ProductDataQuantity, PurchaseOrderDetails } from "../types/types";
 
 const createPurchaseOrder = (req: Request, res: Response) => {
   res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Allow-Origin", "true");
 
   const supplierID = req.body.supplierID;
   const products = req.body.products;
@@ -49,17 +50,22 @@ const getOrderedIds = (req: Request, res: Response) => {
   pool.query(`select purchase_id from purchase_orders where status = "ordered";`, (err, result: any) => {
     const orderIds = result.map((order: any) => order.purchase_id);
     res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Allow-Origin", "true");
     res.send(JSON.stringify(orderIds));
   });
 };
 
 const getReceivedIds = (req: Request, res: Response) => {
-  pool.query(`select purchase_id from purchase_orders where status = "received" 
-  ORDER BY received_date;`, (err, result: any) => {
-    const orderIds = result.map((order: any) => order.purchase_id);
-    res.setHeader("Access-Control-Allow-Credentials", "true");
-    res.send(JSON.stringify(orderIds));
-  });
+  pool.query(
+    `select purchase_id from purchase_orders where status = "received" 
+  ORDER BY received_date;`,
+    (err, result: any) => {
+      const orderIds = result.map((order: any) => order.purchase_id);
+      res.setHeader("Access-Control-Allow-Credentials", "true");
+      res.setHeader("Access-Control-Allow-Origin", "true");
+      res.send(JSON.stringify(orderIds));
+    }
+  );
 };
 
 const getPurchaseOrder = (req: Request, res: Response) => {
@@ -84,6 +90,7 @@ const getPurchaseOrder = (req: Request, res: Response) => {
         console.log(err);
       }
       res.setHeader("Access-Control-Allow-Credentials", "true");
+      res.setHeader("Access-Control-Allow-Origin", "true");
       res.send(JSON.stringify(result));
     }
   );
@@ -103,6 +110,7 @@ const setOrderReceived = (req: Request, res: Response) => {
         console.log(err, "update to received error");
       }
       res.setHeader("Access-Control-Allow-Credentials", "true");
+      res.setHeader("Access-Control-Allow-Origin", "true");
       res.send(JSON.stringify(result));
     }
   );
@@ -129,6 +137,7 @@ const updateQuantityOnReceived = (req: Request, res: Response) => {
   });
 
   res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Allow-Origin", "true");
   res.send(JSON.stringify("ok"));
 };
 

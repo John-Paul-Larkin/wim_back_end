@@ -5,12 +5,14 @@ import pool from "../config/dbConfig";
 const getAllProducts = (req: Request, res: Response) => {
   pool.query("select * from product;", (err, result) => {
     res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Allow-Origin", "true");
     res.send(JSON.stringify(result));
   });
 };
 
 const editProduct = (req: Request, res: Response) => {
   res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Allow-Origin", "true");
 
   const name = req.body.name;
   const description = req.body.description;
@@ -85,4 +87,4 @@ const deleteProduct = (req: Request, res: Response) => {
   });
 };
 
-export { getAllProducts, editProduct, deleteProduct };
+export { deleteProduct, editProduct, getAllProducts };

@@ -4,12 +4,14 @@ import pool from "../config/dbConfig";
 const getAllCustomers = (req: Request, res: Response) => {
   pool.query("select * from customer;", (err, result) => {
     res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Allow-Origin", "true");
     res.send(JSON.stringify(result));
   });
 };
 
 const editCustomer = (req: Request, res: Response) => {
   res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Allow-Origin", "true");
 
   const name = req.body.name;
   const rep = req.body.rep;
@@ -58,4 +60,4 @@ const deleteCustomer = (req: Request, res: Response) => {
   });
 };
 
-export { getAllCustomers, editCustomer, deleteCustomer };
+export { deleteCustomer, editCustomer, getAllCustomers };
