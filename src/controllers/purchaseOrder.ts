@@ -47,6 +47,9 @@ const createPurchaseOrder = (req: Request, res: Response) => {
 
 const getOrderedIds = (req: Request, res: Response) => {
   pool.query(`select purchase_id from purchase_orders where status = "ordered";`, (err, result: any) => {
+    console.log(err);
+    console.log(result);
+
     const orderIds = result.map((order: any) => order.purchase_id);
     res.setHeader("Access-Control-Allow-Credentials", "true");
 
