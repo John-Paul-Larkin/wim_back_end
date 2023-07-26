@@ -4,14 +4,14 @@ import pool from "../config/dbConfig";
 const getAllSuppliers = (req: Request, res: Response) => {
   pool.query("select * from supplier;", (err, result) => {
     res.setHeader("Access-Control-Allow-Credentials", "true");
-    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Origin", req.headers.origin!);
     res.send(JSON.stringify(result));
   });
 };
 
 const editSupplier = (req: Request, res: Response) => {
   res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Origin", req.headers.origin!);
 
   const name = req.body.name;
   const rep = req.body.rep;
