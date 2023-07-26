@@ -14,7 +14,8 @@ dotenv.config();
 const app: Express = express();
 
 const corsOptions = {
-  origin: process.env.CORS_HOST,
+  // origin: process.env.CORS_HOST,
+  origin: "*",
 };
 
 app.use(cors(corsOptions));
