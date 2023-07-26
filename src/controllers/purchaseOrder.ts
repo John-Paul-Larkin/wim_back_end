@@ -4,7 +4,6 @@ import { ProductDataQuantity, PurchaseOrderDetails } from "../types/types";
 
 const createPurchaseOrder = (req: Request, res: Response) => {
   res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.setHeader("Access-Control-Allow-Origin", process.env.CORS_HOST!);
 
   const supplierID = req.body.supplierID;
   const products = req.body.products;
@@ -50,7 +49,7 @@ const getOrderedIds = (req: Request, res: Response) => {
   pool.query(`select purchase_id from purchase_orders where status = "ordered";`, (err, result: any) => {
     const orderIds = result.map((order: any) => order.purchase_id);
     res.setHeader("Access-Control-Allow-Credentials", "true");
-    res.setHeader("Access-Control-Allow-Origin", process.env.CORS_HOST!);
+
     res.send(JSON.stringify(orderIds));
   });
 };
@@ -62,7 +61,7 @@ const getReceivedIds = (req: Request, res: Response) => {
     (err, result: any) => {
       const orderIds = result.map((order: any) => order.purchase_id);
       res.setHeader("Access-Control-Allow-Credentials", "true");
-      res.setHeader("Access-Control-Allow-Origin", process.env.CORS_HOST!);
+
       res.send(JSON.stringify(orderIds));
     }
   );
@@ -90,7 +89,7 @@ const getPurchaseOrder = (req: Request, res: Response) => {
         console.log(err);
       }
       res.setHeader("Access-Control-Allow-Credentials", "true");
-      res.setHeader("Access-Control-Allow-Origin", process.env.CORS_HOST!);
+
       res.send(JSON.stringify(result));
     }
   );
@@ -110,7 +109,7 @@ const setOrderReceived = (req: Request, res: Response) => {
         console.log(err, "update to received error");
       }
       res.setHeader("Access-Control-Allow-Credentials", "true");
-      res.setHeader("Access-Control-Allow-Origin", process.env.CORS_HOST!);
+
       res.send(JSON.stringify(result));
     }
   );
@@ -137,7 +136,7 @@ const updateQuantityOnReceived = (req: Request, res: Response) => {
   });
 
   res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.setHeader("Access-Control-Allow-Origin", process.env.CORS_HOST!);
+
   res.send(JSON.stringify("ok"));
 };
 

@@ -4,7 +4,7 @@ import pool from "../config/dbConfig";
 const getTotalPurchaseValueOfStock = (req: Request, res: Response) => {
   pool.query("SELECT SUM(quantity_in_stock * purchase_price) AS total_cost from product;", (err, result) => {
     res.setHeader("Access-Control-Allow-Credentials", "true");
-    res.setHeader("Access-Control-Allow-Origin", process.env.CORS_HOST!);
+
     res.send(JSON.stringify(result));
   });
 };
@@ -12,7 +12,7 @@ const getTotalPurchaseValueOfStock = (req: Request, res: Response) => {
 const getTotalSaleValueOfStock = (req: Request, res: Response) => {
   pool.query("SELECT SUM(quantity_in_stock * sale_price) AS total_sale from product;", (err, result) => {
     res.setHeader("Access-Control-Allow-Credentials", "true");
-    res.setHeader("Access-Control-Allow-Origin", process.env.CORS_HOST!);
+
     res.send(JSON.stringify(result));
   });
 };
@@ -24,7 +24,7 @@ const getProductsBelowRestock = (req: Request, res: Response) => {
     `,
     (err, result) => {
       res.setHeader("Access-Control-Allow-Credentials", "true");
-      res.setHeader("Access-Control-Allow-Origin", process.env.CORS_HOST!);
+
       res.send(JSON.stringify(result));
     }
   );
@@ -43,7 +43,6 @@ const getNumberOfPurchasesBetweenDates = (req: Request, res: Response) => {
         ON p.product_id = pr.product_id;`,
       (err, result) => {
         res.setHeader("Access-Control-Allow-Credentials", "true");
-        res.setHeader("Access-Control-Allow-Origin", process.env.CORS_HOST!);
 
         res.send(JSON.stringify(result));
       }
@@ -60,7 +59,7 @@ const getNumberOfPurchasesBetweenDates = (req: Request, res: Response) => {
         `,
       (err, result) => {
         res.setHeader("Access-Control-Allow-Credentials", "true");
-        res.setHeader("Access-Control-Allow-Origin", process.env.CORS_HOST!);
+
         res.send(JSON.stringify(result));
       }
     );
@@ -79,7 +78,7 @@ const getNumberOfPurchasesBetweenDates = (req: Request, res: Response) => {
     pool.query(sql, (err, result) => {
       console.log(err);
       res.setHeader("Access-Control-Allow-Credentials", "true");
-      res.setHeader("Access-Control-Allow-Origin", process.env.CORS_HOST!);
+
       res.send(JSON.stringify(result));
     });
   }
@@ -98,7 +97,7 @@ const getPurchasesBetweenDates = (req: Request, res: Response) => {
         ON p.product_id = pr.product_id`,
       (err, result) => {
         res.setHeader("Access-Control-Allow-Credentials", "true");
-        res.setHeader("Access-Control-Allow-Origin", process.env.CORS_HOST!);
+
         res.send(JSON.stringify(result));
       }
     );
@@ -114,7 +113,7 @@ const getPurchasesBetweenDates = (req: Request, res: Response) => {
         `,
       (err, result) => {
         res.setHeader("Access-Control-Allow-Credentials", "true");
-        res.setHeader("Access-Control-Allow-Origin", process.env.CORS_HOST!);
+
         res.send(JSON.stringify(result));
       }
     );
@@ -133,7 +132,7 @@ const getPurchasesBetweenDates = (req: Request, res: Response) => {
     pool.query(sql, (err, result) => {
       // console.log(err);
       res.setHeader("Access-Control-Allow-Credentials", "true");
-      res.setHeader("Access-Control-Allow-Origin", process.env.CORS_HOST!);
+
       res.send(JSON.stringify(result));
     });
   }
@@ -152,7 +151,7 @@ const getSalesBetweenDates = (req: Request, res: Response) => {
         ON p.product_id = pr.product_id`,
       (err, result) => {
         res.setHeader("Access-Control-Allow-Credentials", "true");
-        res.setHeader("Access-Control-Allow-Origin", process.env.CORS_HOST!);
+
         res.send(JSON.stringify(result));
       }
     );
@@ -168,7 +167,7 @@ const getSalesBetweenDates = (req: Request, res: Response) => {
         `,
       (err, result) => {
         res.setHeader("Access-Control-Allow-Credentials", "true");
-        res.setHeader("Access-Control-Allow-Origin", process.env.CORS_HOST!);
+
         res.send(JSON.stringify(result));
       }
     );
@@ -187,7 +186,7 @@ const getSalesBetweenDates = (req: Request, res: Response) => {
     pool.query(sql, (err, result) => {
       console.log(err);
       res.setHeader("Access-Control-Allow-Credentials", "true");
-      res.setHeader("Access-Control-Allow-Origin", process.env.CORS_HOST!);
+
       res.send(JSON.stringify(result));
     });
   }
@@ -207,7 +206,7 @@ const getNumberOfSalesBetweenDates = (req: Request, res: Response) => {
         ON p.product_id = pr.product_id`,
       (err, result) => {
         res.setHeader("Access-Control-Allow-Credentials", "true");
-        res.setHeader("Access-Control-Allow-Origin", process.env.CORS_HOST!);
+
         res.send(JSON.stringify(result));
       }
     );
@@ -223,7 +222,7 @@ const getNumberOfSalesBetweenDates = (req: Request, res: Response) => {
         `,
       (err, result) => {
         res.setHeader("Access-Control-Allow-Credentials", "true");
-        res.setHeader("Access-Control-Allow-Origin", process.env.CORS_HOST!);
+
         res.send(JSON.stringify(result));
       }
     );
@@ -242,7 +241,7 @@ const getNumberOfSalesBetweenDates = (req: Request, res: Response) => {
     pool.query(sql, (err, result) => {
       // console.log(err);
       res.setHeader("Access-Control-Allow-Credentials", "true");
-      res.setHeader("Access-Control-Allow-Origin", process.env.CORS_HOST!);
+
       res.send(JSON.stringify(result));
     });
   }
@@ -318,7 +317,6 @@ ORDER BY order_date DESC;
     // console.log(new Date().toString());
     // console.log(new Date().toString());
     res.setHeader("Access-Control-Allow-Credentials", "true");
-    res.setHeader("Access-Control-Allow-Origin", process.env.CORS_HOST!);
 
     res.send(JSON.stringify(result));
   });
